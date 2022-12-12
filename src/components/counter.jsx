@@ -1,60 +1,43 @@
 import React, { useState } from 'react'
 
-const Counter = () => {
-  const [count, setCount] = useState(0) //исходя из соглашения название функции должно начинаться с "set...". Мы таким образом сообщаем реакту об изменениях. Юстейт это своего рода хранилище действий за пределами компанентами.
-  const [tags, setTags] = useState(['tag1', 'tag2', 'tag3'])
+const Counter = (props) => {
+  // некий объект в который мы передаем атрибуты и наши атрибуты будут свойствами этого компонента.
 
-  const formatCount = () => {
-    return count === 0 ? 'empty' : count
+  const { value } = props //исходя из соглашения название функции должно начинаться с "set...". Мы таким образом сообщаем реакту об изменениях. Юстейт это своего рода хранилище действий за пределами компанентами.
+
+  const formatValue = () => {
+    return value <= 0 ? 'empty' : value
   }
 
   const getBageClasses = () => {
     let classes = 'badge m-2 '
-    classes += count === 0 ? 'bg-warning' : 'bg-success'
+    classes += value <= 0 ? 'bg-warning' : 'bg-success'
     return classes
   }
 
-  const handleIncrement = () => {
-    setCount((prevState) => prevState + 1)
-  } // называются согласно конвенции "Хэндлеры" обработчики событий. Обязательно начинаются с "handle..."
-
-  const handleDecrement = () => {
-    setCount((prevState) => prevState - 1)
-  }
-
-  const handleTagChange = (id) => {
-    setTags((prevState) => prevState.filter((tag) => tag !== id)) //получаем массив и с помощью фильтра остаются только те tag на который мы не нажимали.
-  }
-
-  const renderTags = () => {
-    return (
-      tags.length !== 0 &&
-      tags.map((tag) => (
-        <li
-          key={tag}
-          className="btn btn-success btn-sm m-2"
-          onClick={() => handleTagChange(tag)}
-        >
-          {tag}
-        </li>
-      ))
-    )
-  }
-  if (tags.length !== 0) {
-    return <ul>{renderTags()}</ul>
-  }
-
   return (
-    <>
-      <ul>{renderTags()}</ul>
-      <span className={getBageClasses()}>{formatCount()}</span>
-      <button className="btn btn-success btn-sm m-2" onClick={handleIncrement}>
+    <div>
+      {<span>{props.name}</span>}
+      <span className={getBageClasses()}>{formatValue()}</span>
+      <button
+        className="btn btn-success btn-sm m-2"
+        onClick={() => props.onIncrement(props.id)}
+      >
         +
       </button>
-      <button className="btn btn-success btn-sm m-2" onClick={handleDecrement}>
+      <button
+        className="btn btn-success btn-sm m-2"
+        onClick={() => props.onDecrement(props.id)}
+      >
         -
       </button>
-    </> //вешаем обработчик событий онклик на кнопку. С переданным референцом функции. Функцию при этом не вызываем.
+      <button
+        className="btn btn-danger btn-sm m-2"
+        onClick={() => props.onDelete(props.id)}
+      >
+        Delete
+      </button>
+    </div> //вешаем обработчик событий онклик на кнопку. С переданным референцом функции. Функцию при этом не вызываем.
   )
 }
 
